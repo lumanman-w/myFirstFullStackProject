@@ -35,7 +35,7 @@ export default {
     /* 可调用的方法 */
     async fetch() {
       const res = await this.$http.get(
-        "categories"
+        "rest/categories"
       ); /* 注意要有await,否则列表中的数据不展示 */
       this.items = res.data;
     },
@@ -46,7 +46,7 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          await this.$http.delete(`categories/${row._id}`);
+          await this.$http.delete(`rest/categories/${row._id}`);
           this.$message({
             type: "success",
             message: "删除成功!",
