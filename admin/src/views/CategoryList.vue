@@ -1,0 +1,33 @@
+<template>
+  <div>
+    <h1>
+      分类列表
+    </h1>
+    <el-table :data="items">
+      <el-table-column prop="_id" label="ID" width="220"> </el-table-column>
+      <el-table-column prop="name" label="分类名称"> </el-table-column>
+    </el-table>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      items: [],
+    };
+  },
+  methods: {
+    /* 可调用的方法 */
+    async fetch() {
+      const res = await this.$http.get(
+        "categories"
+      ); /* 注意要有await,否则列表中的数据不展示 */
+      this.items = res.data;
+    },
+  },
+  created() {
+    /* 初始化时执行的方法 */
+    this.fetch();
+  },
+};
+</script>

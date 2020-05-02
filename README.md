@@ -41,3 +41,18 @@ npm i -g nodemon
 ```shell
 vue create filename
 ```
+
+组织原生表单的提交
+
+```html
+<el-form label-width="120px" @submit.native.prevent="save"></el-form>
+```
+
+服务端安装依赖--
+express--基于node的web平台开发框架
+mongoose--连接数据库
+cors--跨域使用
+
+```shell
+npm i express@next mongoose cors
+```
