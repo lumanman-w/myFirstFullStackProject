@@ -40,4 +40,15 @@ module.exports = app => {
     req.Model = require(`../../models/${modelName}`);
     next()
   }, router)
+
+  /* multer 用于处理上传的文件 */
+  const multer = require('multer')
+  const upload = multer({ dest: __dirname + '/../../uploads' }) /* __dirname表示当前文件夹的绝对地址 */
+  /* upload.single('file') -- 接收单个文件的上传 */
+  app.use('/admin/api/upload', upload.single('file'), async (req, res) => {
+    /* 本身没有req.file,因为用了中间件处理了一次，所以有了req.file */
+    const file = req.file;
+    file.url = `http://localhost:3000/uploads/${file.filename}`
+    res.send(file)
+  })
 }
