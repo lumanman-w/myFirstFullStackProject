@@ -9,7 +9,7 @@ module.exports = app => {
   })
 
   router.get('/categories', async (req, res) => {
-    const items = await Category.find().limit(10) // 获取数据列表10条
+    const items = await Category.find().populate('parent').limit(10) // 获取数据列表10条 .populate()表示关联取出某个字段
     res.send(items)
   })
 
