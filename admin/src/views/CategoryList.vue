@@ -15,6 +15,9 @@
           >
             编辑
           </el-button>
+          <el-button type="primary" size="small" @click="remove(scope.row)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -34,6 +37,27 @@ export default {
         "categories"
       ); /* 注意要有await,否则列表中的数据不展示 */
       this.items = res.data;
+    },
+    async remove(row) {
+      this.$confirm(`是否删除分类"${row.name}"`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          await this.$http.delete(`categories/${row._id}`);
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+          this.fetch();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
   created() {
