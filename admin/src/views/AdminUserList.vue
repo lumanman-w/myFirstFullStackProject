@@ -1,23 +1,17 @@
 <template>
   <div>
     <h1>
-      物品列表
+      分类列表
     </h1>
-    <el-table :data="heros">
+    <el-table :data="items">
       <el-table-column prop="_id" label="ID" width="220"> </el-table-column>
-      <el-table-column prop="name" label="英雄名称"> </el-table-column>
-      <el-table-column prop="title" label="称号"> </el-table-column>
-      <el-table-column prop="icon" label="头像">
-        <template slot-scope="scope">
-          <img :src="scope.row.avatar" style="height:3rem" />
-        </template>
-      </el-table-column>
+      <el-table-column prop="username" label="用户名"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-button
             type="primary"
             size="small"
-            @click="$router.push(`/heros/edit/${scope.row._id}`)"
+            @click="$router.push(`/admin_users/edit/${scope.row._id}`)"
           >
             编辑
           </el-button>
@@ -33,25 +27,25 @@
 export default {
   data() {
     return {
-      heros: [],
+      items: [],
     };
   },
   methods: {
     /* 可调用的方法 */
     async fetch() {
       const res = await this.$http.get(
-        "rest/heros"
+        "rest/admin_users"
       ); /* 注意要有await,否则列表中的数据不展示 */
-      this.heros = res.data;
+      this.items = res.data;
     },
     async remove(row) {
-      this.$confirm(`是否删除英雄"${row.name}"`, "提示", {
+      this.$confirm(`是否删除用户"${row.name}"`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          await this.$http.delete(`rest/heros/${row._id}`);
+          await this.$http.delete(`rest/admin_users/${row._id}`);
           this.$message({
             type: "success",
             message: "删除成功!",
