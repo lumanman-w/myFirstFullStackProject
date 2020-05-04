@@ -2,6 +2,8 @@ const express = require('express')
 
 const app = express()
 
+app.set('secret', 'lumanman123');  // 设置密钥
+
 app.use(require('cors')()) // 引入跨域模块
 app.use(express.json()) // 引用json模块
 app.use('/uploads', express.static(__dirname + '/uploads')) // 静态托管文件
