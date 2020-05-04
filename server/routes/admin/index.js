@@ -1,5 +1,9 @@
 module.exports = app => {
-  const express = require('express')
+  const express = require('express');
+  const jwt = require('jsonwebtoken');
+  const assert = require('http-assert');
+  const AdminUser = require('../../models/AdminUser');
+
   const router = express.Router({
     mergeParams: true, /* 由于在app.use处定义了参数，又要在router里面使用这个参数，所以需要合并参数 */
   })
@@ -39,6 +43,15 @@ module.exports = app => {
     const modelName = require('inflection').classify(req.params.resource); /* 将小写的复数形式转化为首字母大写的单数形式 */
     req.Model = require(`../../models/${modelName}`);
     next()
+  }, async (req, res, next) => {
+    let token = req.headers.authorization ? String(req.headers.authorization).split(' ').pop() : '';
+    assert(token, 401, '请先登录'); // 因为jwt验证时，token不能为空
+    let { id } = jwt.verify(token, app.get('secret'));
+    assert(id, 401, '请先登录');
+    let user = await AdminUser.findById(id);
+    req.user = user;
+    assert(req.user, 401, '请先登录');
+    await next()
   }, router)
 
   /* multer 用于处理上传的文件 */
@@ -55,23 +68,29 @@ module.exports = app => {
   app.use('/admin/api/login', async (req, res) => {
     // 1、根据用户名找用户
     const { username, password } = req.body;
-    const AdminUser = require('../../models/AdminUser');
     let user = await AdminUser.findOne({ username }).select('+password');
-    if (!user) {
+    assert(user, 422, '用户不存在');
+    /* if (!user) {
       res.status(422).send({
         message: '用户不存在'
       })
-    }
+    } */
     // 2、校验密码
     const isValid = require('bcrypt').compareSync(password, user.password);
-    if (!isValid) {
+    assert(isValid, 422, '密码不正确');
+    /* if (!isValid) {
       res.status(422).send({
         message: '密码不正确'
       })
-    }
+    } */
     // 3、返回token
-    let jwt = require('jsonwebtoken');
     let token = jwt.sign({ id: user._id }, app.get('secret')); // app.get() 与获取路由的方法冲突，通过参数来区分，只有一个参数就是获取配置
     res.send({ token });
+  })
+  /* 错误处理 */
+  app.use(async (err, req, res, next) => {
+    res.status(err.statusCode || 500).send({
+      message: err.message
+    })
   })
 }
