@@ -24,7 +24,6 @@ export default {
   methods: {
     async login() {
       let res = await this.$http.post("login", this.model);
-      console.log("res", res.data);
       localStorage.token = res.data.token; // 浏览器关闭后仍然存在
       // sessionStorage.token = res.data.token; // 浏览器关闭后，随之消失
       this.$router.push("/"); // 跳转到根路径
