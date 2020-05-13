@@ -26,7 +26,10 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: {
+      isPublic: true
+    }
   },
   {
     path: '/',
@@ -62,6 +65,14 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+/* 添加客户端登录验证 */
+router.beforeEach((to, from, next) => {
+  if (!to.meta.isPublic && !localStorage.token) {
+    return next('/login');
+  }
+  next()
 })
 
 export default router
