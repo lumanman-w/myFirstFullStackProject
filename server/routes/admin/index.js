@@ -39,32 +39,25 @@ module.exports = app => {
     })
   })
 
-  app.use('/admin/api/rest/:resource', async (req, res, next) => {
-    const modelName = require('inflection').classify(req.params.resource); /* 将小写的复数形式转化为首字母大写的单数形式 */
-    req.Model = require(`../../models/${modelName}`);
-    next()
-  }, async (req, res, next) => {
-    let token = req.headers.authorization ? String(req.headers.authorization).split(' ').pop() : '';
-    assert(token, 401, '请先登录'); // 因为jwt验证时，token不能为空
-    let { id } = jwt.verify(token, app.get('secret'));
-    assert(id, 401, '请先登录');
-    let user = await AdminUser.findById(id);
-    req.user = user;
-    assert(req.user, 401, '请先登录');
-    await next()
-  }, router)
+  /* 获取资源中间件 */
+  let sourceMiddleware = require('../../middleware/resource')
+  /* token验证中间件 */
+  let authMiddleware = require('../../middleware/auth')
+
+  app.use('/admin/api/rest/:resource', authMiddleware(), sourceMiddleware(), router)
 
   /* multer 用于处理上传的文件 */
   const multer = require('multer')
   const upload = multer({ dest: __dirname + '/../../uploads' }) /* __dirname表示当前文件夹的绝对地址 */
   /* upload.single('file') -- 接收单个文件的上传 */
-  app.use('/admin/api/upload', upload.single('file'), async (req, res) => {
+  app.use('/admin/api/upload', authMiddleware(), upload.single('file'), async (req, res) => {
     /* 本身没有req.file,因为用了中间件处理了一次，所以有了req.file */
     const file = req.file;
     file.url = `http://localhost:3000/uploads/${file.filename}`
     res.send(file)
   })
 
+  // 登录
   app.use('/admin/api/login', async (req, res) => {
     // 1、根据用户名找用户
     const { username, password } = req.body;
