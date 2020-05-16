@@ -1,3 +1,27 @@
-p {
-  color: red;
+// reset 样式重置
+
+* {
+  box-sizing: border-box;
+  /* 通常盒子模型会以内容为基准，加padding,margin，boder时会将盒子撑大，出现滚动条等现象，所以在重置样式时，通常要将box-sizing设置为borser-box，这样再设置时，会以边框为基准，将内容挤压来布局 */
+  outline: none;
+}
+
+html {
+  font-size: 13px; // 基础字体大小
+}
+
+body {
+  margin: 0px;
+  font-family: Arial, Helvetica, sans-serif; // 最基础
+  /* 
+  Arial -- 几乎所有设备都具备
+  Helvetica -- 苹果设备
+  sans-serif -- 非衬线字体
+  */
+  line-height: 1.2em;
+  background: #f1f1f1;
+}
+
+a {
+  color: #999999;
 }
