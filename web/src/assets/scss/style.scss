@@ -1,5 +1,5 @@
+@import "./variables";
 // reset 样式重置
-
 * {
   box-sizing: border-box;
   /* 通常盒子模型会以内容为基准，加padding,margin，boder时会将盒子撑大，出现滚动条等现象，所以在重置样式时，通常要将box-sizing设置为borser-box，这样再设置时，会以边框为基准，将内容挤压来布局 */
@@ -27,18 +27,6 @@ a {
   color: #999999;
 }
 
-// colors
-$colors: (
-  "primary": #db9e3f,
-  "white": #fff,
-  "light": #f9f9f9,
-  "grey": #999,
-  "grey-1": #666,
-  "dark-1": #343440,
-  "dark": #222,
-  "black": #000,
-);
-
 @each $colorKey, $color in $colors {
   .text-#{$colorKey} {
     color: $color;
@@ -52,28 +40,9 @@ $colors: (
 // text
 @each $var in (left, center, right) {
   .text-#{$var} {
-    text-align: $var;
+    text-align: $var !important;
   }
 }
-
-// font-size
-$base-font-size: 1rem;
-/* 
-8px
-10px
-12px
-13px
-14px
-16px
-*/
-$font-sizes: (
-  xxs: 0.6154,
-  xs: 0.7692,
-  sm: 0.9231,
-  md: 1,
-  lg: 1.0769,
-  xl: 1.2308,
-);
 
 @each $sizeKey, $size in $font-sizes {
   .fs-#{$sizeKey} {
@@ -81,6 +50,13 @@ $font-sizes: (
   }
 }
 
+// width height
+.w-100 {
+  width: 100%;
+}
+.h-100 {
+  height: 100%;
+}
 // flex
 .d-flex {
   display: flex;
@@ -90,27 +66,11 @@ $font-sizes: (
   flex-direction: column;
 }
 
-$flex-jc: (
-  start: flex-start,
-  end: flex-end,
-  center: center,
-  between: space-between,
-  around: space-around,
-);
-
 @each $key, $value in $flex-jc {
   .jc-#{$key} {
     justify-content: $value;
   }
 }
-
-$flex-ai: (
-  start: flex-start,
-  end: flex-end,
-  center: center,
-  stretch: stretch,
-);
-//stretch  当在水平方向上有一个布局的同时在垂直方向上等高
 
 @each $key, $value in $flex-ai {
   .ai-#{$key} {
@@ -125,28 +85,6 @@ $flex-ai: (
 .flex-grow-1 {
   flex-grow: 1;
 }
-
-$spacing-types: (
-  m: margin,
-  p: padding,
-);
-
-$spacing-directions: (
-  t: top,
-  l: left,
-  r: right,
-  b: bottom,
-);
-
-$spacing-base-size: 1rem;
-$spacing-sizes: (
-  0: 0,
-  1: 0.25,
-  2: 0.5,
-  3: 1,
-  4: 1.5,
-  5: 3,
-);
 
 @each $typeKey, $type in $spacing-types {
   // mt-1
